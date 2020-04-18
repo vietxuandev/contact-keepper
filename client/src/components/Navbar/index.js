@@ -21,6 +21,17 @@ const Navbar = () => {
       <li>
         <NavLink
           exact
+          to='/chat'
+          onClick={() => {
+            setToggle(false);
+          }}
+        >
+          Chat
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          exact
           to='/register'
           onClick={() => {
             setToggle(false);

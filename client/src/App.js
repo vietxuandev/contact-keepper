@@ -5,6 +5,7 @@ import Home from './components/pages/Home';
 import About from './components/pages/About';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
+import Chat from './components/chat/Chat';
 import Alerts from './components/layout/Alerts';
 import ScrollTop from './components/ScrollTop';
 import PrivateRoute from './components/routing/PrivateRoute';
@@ -48,6 +49,7 @@ const App = () => {
                   <Route exact path='/about' component={About} />
                   <Route exact path='/register' component={Register} />
                   <Route exact path='/login' component={Login} />
+                  <Route exact path='/chat' component={Chat} />
                 </Switch>
               </div>
             </Fragment>
