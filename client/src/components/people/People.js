@@ -1,15 +1,31 @@
 import React, { useEffect, useContext } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PeopleContext from '../../context/people/peopleContext';
+import AlertContext from '../../context/alert/alertContext';
 import PeopletFilter from './PeopleFilter';
 
-const People = () => {
+const People = (props) => {
   const peopleContext = useContext(PeopleContext);
-  const { getPeople, people, error, filtered } = peopleContext;
+  const alertContext = useContext(AlertContext);
+  const { setAlert } = alertContext;
+  const {
+    getPeople,
+    people,
+    error,
+    filtered,
+    clearFriendErrors,
+    addFriend,
+  } = peopleContext;
   useEffect(() => {
     getPeople();
     // eslint-disable-next-line
   }, []);
+  useEffect(() => {
+    if (error === 'Invalid Credentials') {
+      setAlert(error, 'danger');
+      clearFriendErrors();
+    }
+    // eslint-disable-next-line
+  }, [error, props.history]);
   return (
     <div>
       <PeopletFilter />
@@ -17,10 +33,11 @@ const People = () => {
         ? filtered.map((person) => (
             <div className='card bg-light' key={person._id}>
               <div>
-                {person.name}{' '}
+                {person.name}
                 <button
                   className='btn btn-primary btn-sm'
                   style={{ float: 'right' }}
+                  onClick={() => addFriend(person._id)}
                 >
                   Add fiend
                 </button>
@@ -36,6 +53,7 @@ const People = () => {
                 <button
                   className='btn btn-primary btn-sm'
                   style={{ float: 'right' }}
+                  onClick={() => addFriend(person._id)}
                 >
                   Add fiend
                 </button>

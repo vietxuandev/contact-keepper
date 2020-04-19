@@ -24,3 +24,6 @@ export const GET_PEOPLE = 'GET_PEOPLE';
 export const PEOPLE_ERROR = 'PEOPLE_ERROR';
 export const FILTER_PEOPLE = 'FILTER_PEOPLE';
 export const CLEAR_FILTER_PEOPLE = 'CLEAR_FILTER_PEOPLE';
+export const ADD_FRIEND = 'ADD_FRIEND';
+export const FRIEND_ERROR = 'FRIEND_ERROR';
+export const CLEAR_FRIEND_ERROR = 'CLEAR_FRIEND_ERROR';

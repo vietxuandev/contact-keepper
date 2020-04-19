@@ -7,6 +7,9 @@ import {
   PEOPLE_ERROR,
   FILTER_PEOPLE,
   CLEAR_FILTER_PEOPLE,
+  ADD_FRIEND,
+  FRIEND_ERROR,
+  CLEAR_FRIEND_ERROR,
 } from '../types';
 
 const PeopleState = (props) => {
@@ -33,6 +36,17 @@ const PeopleState = (props) => {
   const clearFilterPeople = () => {
     dispatch({ type: CLEAR_FILTER_PEOPLE });
   };
+  //Add friend
+  const addFriend = async (id) => {
+    try {
+      await axios.get(`/api/people/add-friend/${id}`);
+      dispatch({ type: ADD_FRIEND });
+    } catch (error) {
+      dispatch({ type: FRIEND_ERROR, payload: error.response.msg });
+    }
+  };
+  //Clear Errors
+  const clearFriendErrors = () => dispatch({ type: CLEAR_FRIEND_ERROR });
   return (
     <PeopleContext.Provider
       value={{
@@ -42,6 +56,8 @@ const PeopleState = (props) => {
         getPeople,
         filterPeople,
         clearFilterPeople,
+        addFriend,
+        clearFriendErrors,
       }}
     >
       {props.children}

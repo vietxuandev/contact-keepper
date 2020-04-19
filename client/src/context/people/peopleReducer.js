@@ -3,6 +3,8 @@ import {
   PEOPLE_ERROR,
   FILTER_PEOPLE,
   CLEAR_FILTER_PEOPLE,
+  ADD_FRIEND,
+  CLEAR_FRIEND_ERROR,
 } from '../types';
 
 const removeAccents = (str) => {
@@ -40,6 +42,16 @@ export default (state, action) => {
       return {
         ...state,
         filtered: null,
+      };
+    case ADD_FRIEND:
+      return {
+        ...state,
+        filtered: null,
+      };
+    case CLEAR_FRIEND_ERROR:
+      return {
+        ...state,
+        error: null,
       };
     default:
       return state;
