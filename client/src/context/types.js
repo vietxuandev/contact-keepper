@@ -19,3 +19,8 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+
+export const GET_PEOPLE = 'GET_PEOPLE';
+export const PEOPLE_ERROR = 'PEOPLE_ERROR';
+export const FILTER_PEOPLE = 'FILTER_PEOPLE';
+export const CLEAR_FILTER_PEOPLE = 'CLEAR_FILTER_PEOPLE';

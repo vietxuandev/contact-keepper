@@ -21,12 +21,12 @@ const Navbar = () => {
       <li>
         <NavLink
           exact
-          to='/chat'
+          to='/join'
           onClick={() => {
             setToggle(false);
           }}
         >
-          Chat
+          Join
         </NavLink>
       </li>
       <li>
