@@ -10,6 +10,8 @@ import {
   ADD_FRIEND,
   FRIEND_ERROR,
   CLEAR_FRIEND_ERROR,
+  REJECT_FRIEND,
+  ACCEPT_FRIEND,
 } from '../types';
 
 const PeopleState = (props) => {
@@ -39,8 +41,26 @@ const PeopleState = (props) => {
   //Add friend
   const addFriend = async (id) => {
     try {
-      await axios.get(`/api/people/add-friend/${id}`);
-      dispatch({ type: ADD_FRIEND });
+      const res = await axios.get(`/api/people/add-friend/${id}`);
+      dispatch({ type: ADD_FRIEND, payload: res.data });
+    } catch (error) {
+      dispatch({ type: FRIEND_ERROR, payload: error.response.msg });
+    }
+  };
+  //Accept friend
+  const acceptFriend = async (id) => {
+    try {
+      const res = await axios.get(`/api/people/accept-friend/${id}`);
+      dispatch({ type: ACCEPT_FRIEND, payload: res.data });
+    } catch (error) {
+      dispatch({ type: FRIEND_ERROR, payload: error.response.msg });
+    }
+  };
+  //Reject friend
+  const rejectFriend = async (id) => {
+    try {
+      const res = await axios.get(`/api/people/reject-friend/${id}`);
+      dispatch({ type: REJECT_FRIEND, payload: res.data });
     } catch (error) {
       dispatch({ type: FRIEND_ERROR, payload: error.response.msg });
     }
@@ -57,6 +77,8 @@ const PeopleState = (props) => {
         filterPeople,
         clearFilterPeople,
         addFriend,
+        acceptFriend,
+        rejectFriend,
         clearFriendErrors,
       }}
     >

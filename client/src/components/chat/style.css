@@ -1,0 +1,73 @@
+.messages {
+  height: 300px;
+  overflow: auto;
+  flex: auto;
+}
+
+.messageBox {
+  border-radius: 20px;
+  padding: 5px 18px;
+  display: inline-block;
+  max-width: 80%;
+  border: 1px solid #efefef;
+}
+
+.messageText {
+  word-wrap: break-word;
+}
+
+.messageText img {
+  vertical-align: middle;
+  width: auto;
+  margin-bottom: 3px;
+}
+
+.messageContainer {
+  display: flex;
+  padding: 0 5%;
+  margin-top: 3px;
+}
+
+.sentText {
+  display: flex;
+  align-items: center;
+  font-family: Helvetica;
+  color: #828282;
+  letter-spacing: 0.3px;
+}
+
+.pl-10 {
+  padding-left: 10px;
+}
+
+.pr-10 {
+  padding-right: 10px;
+}
+
+.justifyEnd {
+  justify-content: flex-end;
+}
+
+.sender {
+  justify-content: flex-end;
+}
+
+.sender .messageBox {
+  background-color: #efefef;
+}
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f4f4f4;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #babac0;
+}

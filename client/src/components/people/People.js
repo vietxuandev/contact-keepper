@@ -1,11 +1,17 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, Fragment } from 'react';
 import PeopleContext from '../../context/people/peopleContext';
 import AlertContext from '../../context/alert/alertContext';
+import AuthContext from '../../context/auth/authContext';
 import PeopletFilter from './PeopleFilter';
 
 const People = (props) => {
   const peopleContext = useContext(PeopleContext);
   const alertContext = useContext(AlertContext);
+  const authContext = useContext(AuthContext);
+  useEffect(() => {
+    authContext.loadUser();
+    // eslint-disable-next-line
+  }, []);
   const { setAlert } = alertContext;
   const {
     getPeople,
@@ -14,6 +20,8 @@ const People = (props) => {
     filtered,
     clearFriendErrors,
     addFriend,
+    acceptFriend,
+    rejectFriend,
   } = peopleContext;
   useEffect(() => {
     getPeople();
@@ -34,13 +42,57 @@ const People = (props) => {
             <div className='card bg-light' key={person._id}>
               <div>
                 {person.name}
-                <button
-                  className='btn btn-primary btn-sm'
-                  style={{ float: 'right' }}
-                  onClick={() => addFriend(person._id)}
-                >
-                  Add fiend
-                </button>
+                {person.status === 0 ? (
+                  <button
+                    className='btn btn-primary btn-sm'
+                    style={{ float: 'right' }}
+                    onClick={() => addFriend(person._id)}
+                  >
+                    Add friend
+                  </button>
+                ) : person.status === 1 ? (
+                  <button
+                    className='btn btn-primary btn-sm'
+                    style={{ float: 'right' }}
+                    onClick={() => rejectFriend(person._id)}
+                  >
+                    Cancel request
+                  </button>
+                ) : person.status === 2 ? (
+                  <Fragment>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => rejectFriend(person._id)}
+                    >
+                      Reject
+                    </button>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => acceptFriend(person._id)}
+                    >
+                      Accept
+                    </button>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => rejectFriend(person._id)}
+                    >
+                      Remove
+                    </button>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => {}}
+                    >
+                      Friend
+                    </button>
+                  </Fragment>
+                )}
               </div>
               <p></p>
             </div>
@@ -49,14 +101,58 @@ const People = (props) => {
           people.map((person) => (
             <div className='card bg-light' key={person._id}>
               <div>
-                {person.name}{' '}
-                <button
-                  className='btn btn-primary btn-sm'
-                  style={{ float: 'right' }}
-                  onClick={() => addFriend(person._id)}
-                >
-                  Add fiend
-                </button>
+                {person.name}
+                {person.status === 0 ? (
+                  <button
+                    className='btn btn-primary btn-sm'
+                    style={{ float: 'right' }}
+                    onClick={() => addFriend(person._id)}
+                  >
+                    Add friend
+                  </button>
+                ) : person.status === 1 ? (
+                  <button
+                    className='btn btn-primary btn-sm'
+                    style={{ float: 'right' }}
+                    onClick={() => rejectFriend(person._id)}
+                  >
+                    Cancel request
+                  </button>
+                ) : person.status === 2 ? (
+                  <Fragment>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => rejectFriend(person._id)}
+                    >
+                      Reject
+                    </button>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => acceptFriend(person._id)}
+                    >
+                      Accept
+                    </button>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => rejectFriend(person._id)}
+                    >
+                      Remove
+                    </button>
+                    <button
+                      className='btn btn-primary btn-sm'
+                      style={{ float: 'right' }}
+                      onClick={() => {}}
+                    >
+                      Friend
+                    </button>
+                  </Fragment>
+                )}
               </div>
               <p></p>
             </div>

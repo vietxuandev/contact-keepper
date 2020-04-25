@@ -18,6 +18,7 @@ import AlertState from './context/alert/AlertState';
 import setAuthToken from './utils/setAuthToken';
 import './App.css';
 import PeopleState from './context/people/PeopleState';
+import ChatState from './context/chat/ChatState';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -42,24 +43,26 @@ const App = () => {
       <ContactState>
         <AlertState>
           <PeopleState>
-            <Router>
-              <Fragment>
-                {scrollY >= 50 && <ScrollTop />}
-                <Navbar />
-                <div className='container'>
-                  <Alerts />
-                  <Switch>
-                    <PrivateRoute exact path='/' component={Home} />
-                    <Route exact path='/about' component={About} />
-                    <Route exact path='/register' component={Register} />
-                    <Route exact path='/login' component={Login} />
-                    <Route exact path='/join' component={Join} />
-                    <Route exact path='/chat' component={Chat} />
-                    <Route exact path='/people' component={People} />
-                  </Switch>
-                </div>
-              </Fragment>
-            </Router>
+            <ChatState>
+              <Router>
+                <Fragment>
+                  {scrollY >= 50 && <ScrollTop />}
+                  <Navbar />
+                  <div className='container'>
+                    <Alerts />
+                    <Switch>
+                      <PrivateRoute exact path='/' component={Home} />
+                      <Route exact path='/about' component={About} />
+                      <Route exact path='/register' component={Register} />
+                      <Route exact path='/login' component={Login} />
+                      <Route exact path='/join' component={Join} />
+                      <Route exact path='/chat/:id' component={Chat} />
+                      <Route exact path='/people' component={People} />
+                    </Switch>
+                  </div>
+                </Fragment>
+              </Router>
+            </ChatState>
           </PeopleState>
         </AlertState>
       </ContactState>

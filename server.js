@@ -6,6 +6,8 @@ const http = require('http');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('./models/User');
+const Message = require('./models/Message');
+const Conversation = require('./models/Conversation');
 const app = express();
 
 //connect db
@@ -28,6 +30,7 @@ app.use('/api/users', cors, require('./routes/users'));
 app.use('/api/auth', cors, require('./routes/auth'));
 app.use('/api/contacts', require('./routes/contacts'));
 app.use('/api/people', require('./routes/people')(io));
+app.use('/api/chat', require('./routes/chat')(io));
 
 io.use(function (socket, next) {
   if (socket.handshake.query && socket.handshake.query.token) {
@@ -43,30 +46,45 @@ io.use(function (socket, next) {
     next(new Error('Authentication error'));
   }
 });
+
 io.on('connection', function (socket) {
   console.log('user connected');
-  socket.on('join', async ({ room }, callback) => {
-    let user = await User.findById(socket.decoded.user.id);
-    socket.join(room);
-    // Gửi cho tất cả client
-    socket.emit('message', {
-      user: 'admin',
-      text: `${user.name}, welcome to room ${user.room}.`,
-    });
-    // Gửi cho tất cả client trong room ngoại trừ người gửi
-    socket.broadcast
-      .to(user.room)
-      .emit('message', { user: 'admin', text: `${user.name} has joined!` });
-    // Gửi tin nhắn riêng cho socket đó qua socketId
-    io.to(user.room).emit('roomData', {
-      room: user.room,
-      users: getUsersInRoom(user.room),
-    });
+  //Siconnect
+  socket.on('disconnect', function () {
+    console.log('user disconnected');
+  });
 
+  socket.on('join', (id, callback) => {
+    socket.join(id);
     callback();
-    socket.on('disconnect', () => {
-      console.log('disconnected');
+  });
+
+  //Someone is typing
+  socket.on('typing', (typing) => {
+    socket.broadcast.emit('notifyTyping', {
+      typing,
     });
+  });
+  //when soemone stops typing
+
+  socket.on('sendMessage', async (data, callback) => {
+    const { id, content } = data;
+    try {
+      const sender = await User.findById(socket.decoded.user.id)
+        .select('-password')
+        .lean();
+      const conversation = await Conversation.findById(id).lean();
+      const message = await new Message({
+        conversation: conversation._id,
+        sender: sender._id,
+        content,
+      }).save();
+      io.to(id).emit('message', message);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+    callback();
   });
 });
 

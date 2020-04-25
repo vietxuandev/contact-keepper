@@ -5,6 +5,8 @@ import {
   CLEAR_FILTER_PEOPLE,
   ADD_FRIEND,
   CLEAR_FRIEND_ERROR,
+  REJECT_FRIEND,
+  ACCEPT_FRIEND,
 } from '../types';
 
 const removeAccents = (str) => {
@@ -17,6 +19,37 @@ const removeAccents = (str) => {
 
 export default (state, action) => {
   switch (action.type) {
+    case ADD_FRIEND:
+    case ACCEPT_FRIEND:
+    case REJECT_FRIEND:
+      const indexPerson = state.people.findIndex(
+        (person) => person._id === action.payload._id
+      );
+      const people = state.people;
+      if (indexPerson != -1) {
+        people[indexPerson] = action.payload;
+      }
+      const filtered = state.filtered;
+      if (filtered) {
+        const indexFilter = state.filtered.findIndex(
+          (person) => person._id === action.payload._id
+        );
+        if (indexFilter != -1) {
+          filtered[indexFilter] = action.payload;
+        }
+      }
+      if (filtered) {
+        return {
+          ...state,
+          people,
+          filtered,
+        };
+      } else {
+        return {
+          ...state,
+          people,
+        };
+      }
     case GET_PEOPLE:
       return {
         ...state,
