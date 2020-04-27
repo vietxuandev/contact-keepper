@@ -36,7 +36,13 @@ module.exports = function (io) {
       const conversation = await Conversation.findById(req.params.id).lean();
       const messages = await Message.find({
         conversation: conversation._id,
-      });
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .limit(50)
+        .lean();
+      messages.sort((a, b) => a.createdAt - b.createdAt);
       res.json(messages);
     } catch (err) {
       console.error(err.message);

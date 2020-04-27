@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useLayoutEffect,
+} from 'react';
 import ChatContext from '../../context/chat/chatContext';
 import { useParams } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 import ClassNames from 'classnames';
 import ReactEmoji from 'react-emoji';
+import UserDefault from '../user-default.jpg';
 
 import io from 'socket.io-client';
 import './style.css';
@@ -21,6 +28,7 @@ const Chat = ({ location }) => {
   const [typing, setTyping] = useState(false);
   const [notifyTyping, setNotifyTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  const [size, setSize] = useState([0, 0]);
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView();
   };
@@ -39,12 +47,22 @@ const Chat = ({ location }) => {
   const onSubmit = (content) => {
     sendMessage(id, content);
   };
-
+  const useWindowSize = () => {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize([window.innerWidth, window.innerHeight]);
+      }
+      window.addEventListener('resize', updateSize);
+      updateSize();
+      return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+  };
+  const [width, height] = useWindowSize();
   useEffect(() => {
     loadUser();
-    // eslint-disable-next-line
-  }, []);
-  useEffect(() => {
+    getMessages(id);
     socket = io(ENDPOINT, {
       query: { token },
     });
@@ -53,24 +71,22 @@ const Chat = ({ location }) => {
         alert(error);
       }
     });
-  }, [ENDPOINT, location]);
-
-  useEffect(() => {
-    getMessages(id);
-  }, []);
-
-  useEffect(() => {
-    setListMess(messages);
-  }, [messages]);
-
-  useEffect(() => {
     socket.on('message', (message) => {
       setListMess((listMess) => [...listMess, message]);
     });
     socket.on('notifyTyping', (data) => {
       setNotifyTyping(data.typing);
     });
+    return () => {
+      socket.emit('disconnect');
+      socket.off();
+    };
+    // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    setListMess(messages);
+  }, [messages]);
 
   useEffect(() => {
     scrollToBottom();
@@ -87,39 +103,56 @@ const Chat = ({ location }) => {
       setTyping(false);
     }
   }, [content]);
+
   useEffect(() => {
     socket.emit('typing', typing);
   }, [typing]);
 
   return (
-    <div>
-      <div className='messages'>
-        {listMess.map((message) => (
+    <div className='messages-wrapper'>
+      <div className='conversation-name'>Ahihi</div>
+      <div
+        className='messages'
+        style={{ height: width < 992 ? height - 175 : height - 205 }}
+      >
+        {listMess.map((message, index) => (
           <div
             key={message._id}
             className={ClassNames('messageContainer', {
               sender: user._id === message.sender,
             })}
           >
-            <div className='messageBox'>
+            {user._id !== message.sender &&
+              (index === messages.length - 1 ||
+                messages[index + 1].sender === user._id) && (
+                <img src={UserDefault} className='avatar-user' alt='avatar' />
+              )}
+            <div
+              className={ClassNames('messageBox', {
+                firstMessage: index === 0,
+              })}
+            >
               <p className='messageText'>
                 {ReactEmoji.emojify(message.content)}
               </p>
             </div>
+            {user._id === message.sender && index === messages.length - 1 && (
+              <img src={UserDefault} className='status' alt='avatar' />
+            )}
           </div>
         ))}
         {notifyTyping && (
           <div className='messageContainer'>
             <div className='messageBox'>
-              <p className='messageText'>Đang nhập...</p>
+              <p className='messageText typing'>Đang nhập...</p>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
-      <div>
+      <div className='input-message'>
         <input
-          placeholder='Type a message...'
+          placeholder='Message...'
           type='text'
           value={content}
           onChange={(evt) => setContent(evt.target.value)}
@@ -129,7 +162,7 @@ const Chat = ({ location }) => {
         />
         <button
           onClick={() => onSubmit(content)}
-          className='btn btn-primary btn-block'
+          className='btn btn-send'
           type='submit'
         >
           Send
