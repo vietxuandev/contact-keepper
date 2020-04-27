@@ -16,7 +16,7 @@ import io from 'socket.io-client';
 import './style.css';
 let socket;
 
-const Chat = ({ location }) => {
+const Chat = () => {
   const chatContext = useContext(ChatContext);
   const authContext = useContext(AuthContext);
   const { loadUser, user } = authContext;
@@ -24,17 +24,15 @@ const Chat = ({ location }) => {
   const token = localStorage.token ? localStorage.token : '';
   const { id = '' } = useParams();
   const [content, setContent] = useState('');
-  const [listMess, setListMess] = useState([]);
   const [typing, setTyping] = useState(false);
   const [notifyTyping, setNotifyTyping] = useState(false);
   const messagesEndRef = useRef(null);
-  const [size, setSize] = useState([0, 0]);
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView();
   };
   const {
     getMessages = () => {},
-    // sendMessage = () => {},
+    addMessage = () => {},
     messages = [],
   } = chatContext;
 
@@ -72,7 +70,7 @@ const Chat = ({ location }) => {
       }
     });
     socket.on('message', (message) => {
-      setListMess((listMess) => [...listMess, message]);
+      addMessage(message);
     });
     socket.on('notifyTyping', (data) => {
       setNotifyTyping(data.typing);
@@ -85,16 +83,8 @@ const Chat = ({ location }) => {
   }, []);
 
   useEffect(() => {
-    setListMess(messages);
-  }, [messages]);
-
-  useEffect(() => {
     scrollToBottom();
-  }, [listMess]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [content, notifyTyping]);
+  }, [messages, content, notifyTyping]);
 
   useEffect(() => {
     if (content !== '') {
@@ -115,7 +105,7 @@ const Chat = ({ location }) => {
         className='messages'
         style={{ height: width < 992 ? height - 175 : height - 205 }}
       >
-        {listMess.map((message, index) => (
+        {messages.map((message, index) => (
           <div
             key={message._id}
             className={ClassNames('messageContainer', {
@@ -144,7 +134,13 @@ const Chat = ({ location }) => {
         {notifyTyping && (
           <div className='messageContainer'>
             <div className='messageBox'>
-              <p className='messageText typing'>Đang nhập...</p>
+              <p className='messageText'>
+                <div id='wave'>
+                  <span className='dot'></span>
+                  <span className='dot'></span>
+                  <span className='dot'></span>
+                </div>
+              </p>
             </div>
           </div>
         )}

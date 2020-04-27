@@ -34,4 +34,5 @@ export const GET_MESSAGES = 'GET_MESSAGES';
 export const MESSAGES_ERROR = 'MESSAGES_ERROR';
 
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const ADD_MESSAGE = 'ADD_MESSAGE';
 export const MESSAGE_ERROR = 'MESSAGE_ERROR';
