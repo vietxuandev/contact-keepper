@@ -16,6 +16,7 @@ const UserSchema = mongoose.Schema(
       require: true,
     },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+    active: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
