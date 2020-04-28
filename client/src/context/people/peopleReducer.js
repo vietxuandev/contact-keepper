@@ -26,7 +26,7 @@ export default (state, action) => {
         (person) => person._id === action.payload._id
       );
       const people = state.people;
-      if (indexPerson != -1) {
+      if (indexPerson !== -1) {
         people[indexPerson] = action.payload;
       }
       const filtered = state.filtered;
@@ -34,7 +34,7 @@ export default (state, action) => {
         const indexFilter = state.filtered.findIndex(
           (person) => person._id === action.payload._id
         );
-        if (indexFilter != -1) {
+        if (indexFilter !== -1) {
           filtered[indexFilter] = action.payload;
         }
       }

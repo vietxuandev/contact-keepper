@@ -5,6 +5,7 @@ module.exports = function (io) {
   const auth = require('../middleware/auth');
   const User = require('../models/User');
   const Friend = require('../models/Friend');
+  const Conversation = require('../models/Conversation');
 
   // @route    GET api/people
   // @desc     Get all users
@@ -93,6 +94,7 @@ module.exports = function (io) {
         { $set: { status: 3 } }
       );
       UserB.status = 3;
+      await new Conversation({ participants: [req.params.id] }).save();
       res.json(UserB);
     } catch (err) {
       console.error(err.message);
