@@ -74,7 +74,22 @@ module.exports = function (io) {
             localField: "participants",
             as: "participants"
           }
-        }]);
+        },
+        {
+          $project: {
+            participants: {
+              $map: {
+                input: '$participants',
+                as: 'participants',
+                in: {
+                  name: '$$participants.name',
+                  active: '$$participants.active'
+                }
+              }
+            }
+          }
+        }
+      ]);
       res.json(conversation);
     } catch (err) {
       console.error(err.message);
