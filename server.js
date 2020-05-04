@@ -79,10 +79,8 @@ io.on('connection', async (socket) => {
   socket.on('sendMessage', async (data, callback) => {
     const { id, content } = data;
     try {
-      const sender = await User.findById(socket.decoded.user.id)
-        .select('-password')
-        .lean();
-      const conversation = await Conversation.findById(id).lean();
+      const sender = await User.findById(socket.decoded.user.id);
+      const conversation = await Conversation.findById(id);
       const message = await new Message({
         conversation: conversation._id,
         sender: sender._id,

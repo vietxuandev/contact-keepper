@@ -2,10 +2,17 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import ChatContext from './chatContext';
 import chatReducer from './chatReducer';
-import { GET_MESSAGES, MESSAGES_ERROR, ADD_MESSAGE } from '../types';
+import {
+  GET_MESSAGES,
+  MESSAGES_ERROR,
+  ADD_MESSAGE,
+  GET_CONVERSATION,
+  CONVERSATION_ERROR,
+} from '../types';
 
 const ChatState = (props) => {
   const initialState = {
+    conversation: [],
     messages: [],
     error: null,
   };
@@ -17,6 +24,16 @@ const ChatState = (props) => {
       dispatch({ type: GET_MESSAGES, payload: res.data });
     } catch (error) {
       dispatch({ type: MESSAGES_ERROR, payload: error.response.msg });
+    }
+  };
+
+  //Get messages
+  const getConersation = async () => {
+    try {
+      const res = await axios.get(`/api/chat/conversation`);
+      dispatch({ type: GET_CONVERSATION, payload: res.data });
+    } catch (error) {
+      dispatch({ type: CONVERSATION_ERROR, payload: error.response.msg });
     }
   };
 
@@ -32,6 +49,7 @@ const ChatState = (props) => {
         error: state.error,
         getMessages,
         addMessage,
+        getConersation,
       }}
     >
       {props.children}
