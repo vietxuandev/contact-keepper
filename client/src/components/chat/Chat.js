@@ -20,7 +20,7 @@ const Chat = () => {
   const chatContext = useContext(ChatContext);
   const authContext = useContext(AuthContext);
   const { loadUser, user } = authContext;
-  const ENDPOINT = '150.95.113.203:5000';
+  const ENDPOINT = 'localhost:5000';
   const token = localStorage.token ? localStorage.token : '';
   const { id = '' } = useParams();
   const [content, setContent] = useState('');

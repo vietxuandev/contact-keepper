@@ -94,11 +94,6 @@ module.exports = function (io) {
         { $set: { status: 3 } }
       );
       UserB.status = 3;
-<<<<<<< HEAD
-      const conversation = await Conversation.find({ participants: { $all: [req.user.id, req.params.id] } });
-      if (conversation.length === 0) {
-        await new Conversation({ participants: [req.params.id, req.user.id] }).save();
-=======
       const conversation = await Conversation.find({
         participants: { $all: [req.params.id, req.user.id] },
       });
@@ -106,7 +101,6 @@ module.exports = function (io) {
         await new Conversation({
           participants: [req.params.id, req.user.id],
         }).save();
->>>>>>> 4f80b319e54f6eebe92e3dc056cef776cb24fb86
       }
       res.json(UserB);
     } catch (err) {
