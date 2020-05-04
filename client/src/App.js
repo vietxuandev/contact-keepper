@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/pages/Home';
@@ -9,7 +9,6 @@ import Join from './components/join/Join';
 import Chat from './components/chat/Chat';
 import People from './components/people/People';
 import Alerts from './components/layout/Alerts';
-import ScrollTop from './components/ScrollTop';
 import PrivateRoute from './components/routing/PrivateRoute';
 
 import ContactState from './context/contact/ContactState';
@@ -25,19 +24,6 @@ if (localStorage.token) {
 }
 
 const App = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const logit = () => {
-    setScrollY(window.pageYOffset);
-  };
-  useEffect(() => {
-    const watchScroll = () => {
-      window.addEventListener('scroll', logit);
-    };
-    watchScroll();
-    return () => {
-      window.removeEventListener('scroll', logit);
-    };
-  });
   return (
     <AuthState>
       <ContactState>
@@ -46,7 +32,6 @@ const App = () => {
             <ChatState>
               <Router>
                 <Fragment>
-                  {scrollY >= 50 && <ScrollTop />}
                   <Navbar />
                   <div className='container'>
                     <Alerts />

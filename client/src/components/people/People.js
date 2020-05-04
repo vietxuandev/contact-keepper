@@ -3,15 +3,13 @@ import PeopleContext from '../../context/people/peopleContext';
 import AlertContext from '../../context/alert/alertContext';
 import AuthContext from '../../context/auth/authContext';
 import PeopletFilter from './PeopleFilter';
+import './style.css';
 
 const People = (props) => {
   const peopleContext = useContext(PeopleContext);
   const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
-  useEffect(() => {
-    authContext.loadUser();
-    // eslint-disable-next-line
-  }, []);
+
   const { setAlert } = alertContext;
   const {
     getPeople,
@@ -24,6 +22,7 @@ const People = (props) => {
     rejectFriend,
   } = peopleContext;
   useEffect(() => {
+    authContext.loadUser();
     getPeople();
     // eslint-disable-next-line
   }, []);
