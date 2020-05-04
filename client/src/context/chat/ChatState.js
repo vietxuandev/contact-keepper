@@ -6,13 +6,13 @@ import {
   GET_MESSAGES,
   MESSAGES_ERROR,
   ADD_MESSAGE,
-  GET_CONVERSATION,
   CONVERSATION_ERROR,
+  GET_CONVERSATIONS,
 } from '../types';
 
 const ChatState = (props) => {
   const initialState = {
-    conversation: [],
+    conversations: [],
     messages: [],
     error: null,
   };
@@ -28,10 +28,10 @@ const ChatState = (props) => {
   };
 
   //Get messages
-  const getConersation = async () => {
+  const getConversations = async () => {
     try {
       const res = await axios.get(`/api/chat/conversation`);
-      dispatch({ type: GET_CONVERSATION, payload: res.data });
+      dispatch({ type: GET_CONVERSATIONS, payload: res.data });
     } catch (error) {
       dispatch({ type: CONVERSATION_ERROR, payload: error.response.msg });
     }
@@ -46,10 +46,11 @@ const ChatState = (props) => {
     <ChatContext.Provider
       value={{
         messages: state.messages,
+        conversations: state.conversations,
         error: state.error,
         getMessages,
         addMessage,
-        getConersation,
+        getConversations,
       }}
     >
       {props.children}

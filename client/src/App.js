@@ -7,6 +7,7 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Join from './components/join/Join';
 import Chat from './components/chat/Chat';
+import Conversation from './components/conversation/Conversation';
 import People from './components/people/People';
 import Alerts from './components/layout/Alerts';
 import PrivateRoute from './components/routing/PrivateRoute';
@@ -43,6 +44,11 @@ const App = () => {
                       <Route exact path='/join' component={Join} />
                       <Route exact path='/chat/:id' component={Chat} />
                       <Route exact path='/people' component={People} />
+                      <Route
+                        exact
+                        path='/conversation'
+                        component={Conversation}
+                      />
                     </Switch>
                   </div>
                 </Fragment>
