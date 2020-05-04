@@ -77,16 +77,8 @@ module.exports = function (io) {
         },
         {
           $project: {
-            participants: {
-              $map: {
-                input: '$participants',
-                as: 'participants',
-                in: {
-                  name: '$$participants.name',
-                  active: '$$participants.active'
-                }
-              }
-            }
+            "participants.password": 0,
+            "participants.friends": 0,
           }
         }
       ]);
