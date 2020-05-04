@@ -61,5 +61,26 @@ module.exports = function (io) {
     }
   });
 
+  router.get('/conversation', auth, async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id);
+      const conversation = await Conversation.aggregate([
+        { $match: { "participants": { $all: [user._id] } } },
+        {
+          $lookup:
+          {
+            from: "users",
+            foreignField: "_id",
+            localField: "participants",
+            as: "participants"
+          }
+        }]);
+      res.json(conversation);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  });
+
   return router;
 };

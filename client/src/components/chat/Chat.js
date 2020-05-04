@@ -20,7 +20,7 @@ const Chat = () => {
   const chatContext = useContext(ChatContext);
   const authContext = useContext(AuthContext);
   const { loadUser, user } = authContext;
-  const ENDPOINT = '192.168.0.147:5000';
+  const ENDPOINT = '192.168.107.220:5000';
   const token = localStorage.token ? localStorage.token : '';
   const { id = '' } = useParams();
   const [content, setContent] = useState('');
@@ -31,8 +31,8 @@ const Chat = () => {
     messagesEndRef.current.scrollIntoView();
   };
   const {
-    getMessages = () => {},
-    addMessage = () => {},
+    getMessages = () => { },
+    addMessage = () => { },
     messages = [],
   } = chatContext;
 

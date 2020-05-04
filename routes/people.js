@@ -94,7 +94,10 @@ module.exports = function (io) {
         { $set: { status: 3 } }
       );
       UserB.status = 3;
-      await new Conversation({ participants: [req.params.id] }).save();
+      const conversation = await Conversation.find({ participants: { $all: [req.user.id, req.params.id] } });
+      if (conversation.length === 0) {
+        await new Conversation({ participants: [req.params.id, req.user.id] }).save();
+      }
       res.json(UserB);
     } catch (err) {
       console.error(err.message);
