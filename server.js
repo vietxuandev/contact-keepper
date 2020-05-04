@@ -46,11 +46,21 @@ io.use(function (socket, next) {
     next(new Error('Authentication error'));
   }
 });
-io.on('connection', function (socket) {
-  console.log('user connected');
+io.on('connection', async (socket) => {
+  const user = await User.findByIdAndUpdate(
+    socket.decoded.user.id,
+    { $set: { active: true } },
+    { new: true }
+  );
+  console.log(user.name, 'is online');
   //Siconnect
-  socket.on('disconnect', function () {
-    console.log('user disconnected');
+  socket.on('disconnect', async () => {
+    const user = await User.findByIdAndUpdate(
+      socket.decoded.user.id,
+      { $set: { active: true } },
+      { new: true }
+    );
+    console.log(user.name, 'is online');
   });
 
   socket.on('join', (id, callback) => {
