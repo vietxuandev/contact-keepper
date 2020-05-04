@@ -23,17 +23,7 @@ app.get('/', (req, res) => res.json({ msg: 'hello' }));
 const PORT = process.env.PORT || 5000;
 
 const server = http.createServer(app);
-const io = socketio(server, {
-  handlePreflightRequest: (req, res) => {
-    const headers = {
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Origin': req.headers.origin, //or the specific origin you want to give access to,
-      'Access-Control-Allow-Credentials': true,
-    };
-    res.writeHead(200, headers);
-    res.end();
-  },
-});
+const io = socketio(server);
 
 //Routes
 app.use('/api/users', cors, require('./routes/users'));
@@ -56,7 +46,6 @@ io.use(function (socket, next) {
     next(new Error('Authentication error'));
   }
 });
-io.set('origins = *');
 io.on('connection', function (socket) {
   console.log('user connected');
   //Siconnect
