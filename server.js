@@ -57,10 +57,10 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', async () => {
     const user = await User.findByIdAndUpdate(
       socket.decoded.user.id,
-      { $set: { active: true } },
-      { new: true }
+      { $set: { active: false } },
+      { new: false }
     );
-    console.log(user.name, 'is online');
+    console.log(user.name, 'is offline');
   });
 
   socket.on('join', (id, callback) => {
