@@ -5,20 +5,17 @@ module.exports = function (io) {
   const User = require('../models/User');
   const Message = require('../models/Message');
   const Conversation = require('../models/Conversation');
+  const mongoose = require('mongoose');
 
   // @route    GET api/people
   // @desc     Get all users
   // @access   Private
   router.post('/message/:id', auth, async (req, res) => {
     try {
-      const sender = await User.findById(req.user.id)
-        .select('-password')
-        .lean();
-      const conversation = await Conversation.findById(req.params.id).lean();
       const { content } = req.body;
       const message = await new Message({
-        conversation: conversation._id,
-        sender: sender._id,
+        conversation: mongoose.Types.ObjectId(req.params.id),
+        sender: mongoose.Types.ObjectId(req.user.id),
         content,
       }).save();
       res.json(message);
@@ -33,9 +30,8 @@ module.exports = function (io) {
   // @access   Private
   router.get('/message/:id', auth, async (req, res) => {
     try {
-      const conversation = await Conversation.findById(req.params.id).lean();
       const messages = await Message.find({
-        conversation: conversation._id,
+        conversation: mongoose.Types.ObjectId(req.params.id),
       })
         .sort({
           createdAt: -1,
@@ -65,22 +61,47 @@ module.exports = function (io) {
     try {
       const user = await User.findById(req.user.id);
       const conversation = await Conversation.aggregate([
-        { $match: { "participants": { $all: [user._id] } } },
+        { $match: { participants: { $all: [user._id] } } },
         {
-          $lookup:
-          {
-            from: "users",
-            foreignField: "_id",
-            localField: "participants",
-            as: "participants"
-          }
+          $lookup: {
+            from: 'users',
+            foreignField: '_id',
+            localField: 'participants',
+            as: 'participants',
+          },
         },
         {
           $project: {
-            "participants.password": 0,
-            "participants.friends": 0,
-          }
-        }
+            'participants.password': 0,
+            'participants.friends': 0,
+          },
+        },
+      ]);
+      res.json(conversation);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  });
+
+  router.get('/conversation/:id', auth, async (req, res) => {
+    try {
+      const conversation = await Conversation.aggregate([
+        { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
+        {
+          $lookup: {
+            from: 'users',
+            foreignField: '_id',
+            localField: 'participants',
+            as: 'participants',
+          },
+        },
+        {
+          $project: {
+            'participants.password': 0,
+            'participants.friends': 0,
+          },
+        },
       ]);
       res.json(conversation);
     } catch (err) {

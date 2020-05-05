@@ -8,6 +8,18 @@ const Conversation = () => {
   const history = useHistory();
   useEffect(() => {
     getConversations();
+    const ele = document.getElementById('ipl-progress-indicator');
+    if (ele) {
+      // fade out
+      ele.classList.add('available');
+      setTimeout(() => {
+        // remove from DOM
+        const ele = document.getElementById('ipl-progress-indicator');
+        if (ele) {
+          ele.outerHTML = '';
+        }
+      }, 2000);
+    }
     // eslint-disable-next-line
   }, []);
   return (

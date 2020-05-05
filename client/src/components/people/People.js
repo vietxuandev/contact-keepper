@@ -24,6 +24,18 @@ const People = (props) => {
   useEffect(() => {
     authContext.loadUser();
     getPeople();
+    const ele = document.getElementById('ipl-progress-indicator');
+    if (ele) {
+      // fade out
+      ele.classList.add('available');
+      setTimeout(() => {
+        // remove from DOM
+        const ele = document.getElementById('ipl-progress-indicator');
+        if (ele) {
+          ele.outerHTML = '';
+        }
+      }, 2000);
+    }
     // eslint-disable-next-line
   }, []);
   useEffect(() => {

@@ -2,12 +2,27 @@ import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
 import AuthContext from '../../context/auth/authContext';
 
-const Register = props => {
+const Register = (props) => {
   const alertContext = useContext(AlertContext);
   const authContext = useContext(AuthContext);
 
   const { setAlert } = alertContext;
   const { register, error, clearErrors, isAuthenticated } = authContext;
+  useEffect(() => {
+    const ele = document.getElementById('ipl-progress-indicator');
+    if (ele) {
+      // fade out
+      ele.classList.add('available');
+      setTimeout(() => {
+        // remove from DOM
+        const ele = document.getElementById('ipl-progress-indicator');
+        if (ele) {
+          ele.outerHTML = '';
+        }
+      }, 2000);
+    }
+    // eslint-disable-next-line
+  }, []);
   useEffect(() => {
     if (isAuthenticated) {
       props.history.push('/');
@@ -23,15 +38,15 @@ const Register = props => {
     email: '',
     password: '',
     password2: '',
-    phone: ''
+    phone: '',
   });
   const { name, email, password, password2 } = user;
 
-  const onChange = e => {
+  const onChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault();
     if (name === '' || email === '' || password === '') {
       setAlert('Please enter all fields', 'danger');
@@ -41,7 +56,7 @@ const Register = props => {
       register({
         name,
         email,
-        password
+        password,
       });
     }
   };

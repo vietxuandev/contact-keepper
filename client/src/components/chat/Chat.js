@@ -31,8 +31,8 @@ const Chat = () => {
     messagesEndRef.current.scrollIntoView();
   };
   const {
-    getMessages = () => { },
-    addMessage = () => { },
+    getMessages = () => {},
+    addMessage = () => {},
     messages = [],
   } = chatContext;
 
@@ -64,24 +64,32 @@ const Chat = () => {
     socket = io(ENDPOINT, {
       query: { token },
     });
-    socket.emit('join', id, (error) => {
-      if (error) {
-        alert(error);
-      }
-    });
-    socket.on('message', (message) => {
-      addMessage(message);
+    socket.emit('join', id, () => {
+      socket.on('message', (message) => {
+        addMessage(message);
+      });
     });
     socket.on('notifyTyping', (data) => {
       setNotifyTyping(data.typing);
     });
+    const ele = document.getElementById('ipl-progress-indicator');
+    if (ele) {
+      // fade out
+      ele.classList.add('available');
+      setTimeout(() => {
+        // remove from DOM
+        const ele = document.getElementById('ipl-progress-indicator');
+        if (ele) {
+          ele.outerHTML = '';
+        }
+      }, 2000);
+    }
     return () => {
       socket.emit('disconnect');
       socket.off();
     };
     // eslint-disable-next-line
   }, []);
-
   useEffect(() => {
     scrollToBottom();
   }, [messages, content, notifyTyping]);
