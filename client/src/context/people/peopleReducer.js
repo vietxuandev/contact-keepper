@@ -76,11 +76,6 @@ export default (state, action) => {
         ...state,
         filtered: null,
       };
-    case ADD_FRIEND:
-      return {
-        ...state,
-        filtered: null,
-      };
     case CLEAR_FRIEND_ERROR:
       return {
         ...state,
