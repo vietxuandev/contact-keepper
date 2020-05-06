@@ -31,11 +31,12 @@ const Chat = () => {
     messagesEndRef.current.scrollIntoView();
   };
   const {
-    getMessages = () => {},
-    addMessage = () => {},
+    getConversation = () => { },
+    getMessages = () => { },
+    addMessage = () => { },
     messages = [],
+    conversation = {}
   } = chatContext;
-
   const sendMessage = (id, content) => {
     if (content) {
       socket.emit('sendMessage', { id, content }, () => setContent(''));
@@ -61,6 +62,7 @@ const Chat = () => {
   useEffect(() => {
     loadUser();
     getMessages(id);
+    getConversation(id);
     socket = io(ENDPOINT, {
       query: { token },
     });
@@ -108,7 +110,9 @@ const Chat = () => {
 
   return (
     <div className='messages-wrapper'>
-      <div className='conversation-name'>Ahihi</div>
+      <div className='conversation-name'>{conversation.name || conversation.participants
+        .map((participant) => participant.name)
+        .toString().replace(",", ", ")}</div>
       <div
         className='messages'
         style={{ height: width < 992 ? height - 175 : height - 205 }}

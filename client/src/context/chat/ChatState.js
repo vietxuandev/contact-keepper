@@ -8,10 +8,12 @@ import {
   ADD_MESSAGE,
   CONVERSATION_ERROR,
   GET_CONVERSATIONS,
+  GET_CONVERSATION,
 } from '../types';
 
 const ChatState = (props) => {
   const initialState = {
+    conversation: { name: "", participants: [] },
     conversations: [],
     messages: [],
     error: null,
@@ -36,6 +38,15 @@ const ChatState = (props) => {
       dispatch({ type: CONVERSATION_ERROR, payload: error.response.msg });
     }
   };
+  //Get messages
+  const getConversation = async (id) => {
+    try {
+      const res = await axios.get(`/api/chat/conversation/${id}`);
+      dispatch({ type: GET_CONVERSATION, payload: res.data });
+    } catch (error) {
+      dispatch({ type: CONVERSATION_ERROR, payload: error.response.msg });
+    }
+  };
 
   //Add message
   const addMessage = async (message) => {
@@ -47,10 +58,12 @@ const ChatState = (props) => {
       value={{
         messages: state.messages,
         conversations: state.conversations,
+        conversation: state.conversation,
         error: state.error,
         getMessages,
         addMessage,
         getConversations,
+        getConversation
       }}
     >
       {props.children}
