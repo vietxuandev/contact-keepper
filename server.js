@@ -65,6 +65,7 @@ io.on('connection', async (socket) => {
 
   socket.on('join', (id, callback) => {
     socket.join(id);
+    console.log("joined")
     callback();
   });
 

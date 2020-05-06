@@ -134,9 +134,9 @@ const Chat = () => {
                 firstMessage: index === 0,
               })}
             >
-              <p className='messageText'>
+              <div className='messageText'>
                 {ReactEmoji.emojify(message.content)}
-              </p>
+              </div>
             </div>
             {user._id === message.sender && index === messages.length - 1 && (
               <img src={UserDefault} className='status' alt='avatar' />
@@ -146,13 +146,13 @@ const Chat = () => {
         {notifyTyping && (
           <div className='messageContainer'>
             <div className='messageBox'>
-              <p className='messageText'>
+              <div className='messageText'>
                 <div id='wave'>
                   <span className='dot'></span>
                   <span className='dot'></span>
                   <span className='dot'></span>
                 </div>
-              </p>
+              </div>
             </div>
           </div>
         )}
