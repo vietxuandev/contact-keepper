@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import ChatContext from '../../context/chat/chatContext';
 import { useParams } from 'react-router-dom';
+import Linkify from 'react-linkify';
 import AuthContext from '../../context/auth/authContext';
 import ClassNames from 'classnames';
 import ReactEmoji from 'react-emoji';
@@ -25,55 +26,57 @@ const Chat = () => {
   const { id = '' } = useParams();
   const [content, setContent] = useState('');
   const [typing, setTyping] = useState(false);
+  const [connected, setConnected] = useState(false);
   const [notifyTyping, setNotifyTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView();
   };
   const {
-    getConversation = () => { },
-    getMessages = () => { },
-    addMessage = () => { },
+    getConversation = () => {},
+    getMessages = () => {},
+    addMessage = () => {},
     messages = [],
-    conversation = {}
+    conversation = {},
   } = chatContext;
-  const sendMessage = (id, content) => {
+
+  const onSubmit = (content) => {
     if (content) {
       socket.emit('sendMessage', { id, content }, () => setContent(''));
     }
   };
 
-  const onSubmit = (content) => {
-    sendMessage(id, content);
-  };
   const useWindowSize = () => {
     const [size, setSize] = useState([0, 0]);
     useLayoutEffect(() => {
-      function updateSize() {
+      const updateSize = () => {
         setSize([window.innerWidth, window.innerHeight]);
-      }
+      };
       window.addEventListener('resize', updateSize);
       updateSize();
       return () => window.removeEventListener('resize', updateSize);
     }, []);
     return size;
   };
+
   const [width, height] = useWindowSize();
+  useEffect(() => {
+    socket = io(ENDPOINT, {
+      query: { token },
+    });
+    socket.on('connect', () => {
+      setConnected(true);
+    });
+    return () => {
+      socket.emit('disconnect');
+      socket.off();
+    };
+    // eslint-disable-next-line
+  }, []);
   useEffect(() => {
     loadUser();
     getMessages(id);
     getConversation(id);
-    socket = io(ENDPOINT, {
-      query: { token },
-    });
-    socket.emit('join', id, () => {
-      socket.on('message', (message) => {
-        addMessage(message);
-      });
-    });
-    socket.on('notifyTyping', (data) => {
-      setNotifyTyping(data.typing);
-    });
     const ele = document.getElementById('ipl-progress-indicator');
     if (ele) {
       // fade out
@@ -86,14 +89,25 @@ const Chat = () => {
         }
       }, 2000);
     }
-    return () => {
-      socket.emit('disconnect');
-      socket.off();
-    };
     // eslint-disable-next-line
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (connected) {
+      socket.emit('join', id, () => {});
+      socket.on('message', (message) => {
+        addMessage(message);
+      });
+      socket.on('notifyTyping', (data) => {
+        setNotifyTyping(data.typing);
+      });
+    }
+    // eslint-disable-next-line
+  }, [connected]);
+
   useEffect(() => {
     scrollToBottom();
+    // eslint-disable-next-line
   }, [messages, content, notifyTyping]);
 
   useEffect(() => {
@@ -105,14 +119,22 @@ const Chat = () => {
   }, [content]);
 
   useEffect(() => {
-    socket.emit('typing', typing);
-  }, [typing]);
+    if (connected) {
+      socket.emit('typing', typing);
+    }
+  }, [typing, connected]);
 
   return (
     <div className='messages-wrapper'>
-      <div className='conversation-name'>{conversation.name || conversation.participants
-        .map((participant) => participant.name)
-        .toString().replace(",", ", ")}</div>
+      <div className='conversation-name'>
+        <span className='online'></span>
+        {conversation.name ||
+          conversation.participants
+            .filter((participant) => participant._id !== user._id)
+            .map((participant) => participant.name)
+            .toString()
+            .replace(',', ', ')}
+      </div>
       <div
         className='messages'
         style={{ height: width < 992 ? height - 175 : height - 205 }}
@@ -135,7 +157,9 @@ const Chat = () => {
               })}
             >
               <div className='messageText'>
-                {ReactEmoji.emojify(message.content)}
+                <Linkify target='_blank'>
+                  {ReactEmoji.emojify(message.content)}
+                </Linkify>
               </div>
             </div>
             {user._id === message.sender && index === messages.length - 1 && (
@@ -145,6 +169,7 @@ const Chat = () => {
         ))}
         {notifyTyping && (
           <div className='messageContainer'>
+            <img src={UserDefault} className='avatar-user' alt='avatar' />
             <div className='messageBox'>
               <div className='messageText'>
                 <div id='wave'>

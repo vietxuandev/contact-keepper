@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useEffect } from 'react';
 import ContactItem from './ContactItem';
 import ContactContext from '../../context/contact/contactContext';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../spinner/Spinner';
 
 const Contacts = () => {
   const contactContext = useContext(ContactContext);

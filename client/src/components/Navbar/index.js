@@ -21,6 +21,17 @@ const Navbar = () => {
       <li>
         <NavLink
           exact
+          to='/people'
+          onClick={() => {
+            setToggle(false);
+          }}
+        >
+          People
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          exact
           to='/conversation'
           onClick={() => {
             setToggle(false);
@@ -43,7 +54,8 @@ const Navbar = () => {
       <li>
         <NavLink
           exact
-          to='#!'
+          to='/'
+          className='logout'
           onClick={() => {
             setToggle(false);
             onLogout();

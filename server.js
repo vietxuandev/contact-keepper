@@ -53,7 +53,7 @@ io.on('connection', async (socket) => {
     { new: true }
   );
   console.log(user.name, 'is online');
-  //Siconnect
+  //Disconnect
   socket.on('disconnect', async () => {
     const user = await User.findByIdAndUpdate(
       socket.decoded.user.id,
@@ -65,7 +65,6 @@ io.on('connection', async (socket) => {
 
   socket.on('join', (id, callback) => {
     socket.join(id);
-    console.log("joined")
     callback();
   });
 
@@ -87,7 +86,7 @@ io.on('connection', async (socket) => {
         sender: sender._id,
         content,
       }).save();
-      io.to(id).emit('message', message);
+      io.in(id).emit('message', message);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');

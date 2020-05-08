@@ -5,7 +5,6 @@ import Home from './components/pages/Home';
 import About from './components/pages/About';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-import Join from './components/join/Join';
 import Chat from './components/chat/Chat';
 import Conversation from './components/conversation/Conversation';
 import People from './components/people/People';
@@ -19,6 +18,7 @@ import setAuthToken from './utils/setAuthToken';
 import './App.css';
 import PeopleState from './context/people/PeopleState';
 import ChatState from './context/chat/ChatState';
+import NotFound from './components/notfound/NotFound';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -41,14 +41,14 @@ const App = () => {
                       <Route exact path='/about' component={About} />
                       <Route exact path='/register' component={Register} />
                       <Route exact path='/login' component={Login} />
-                      <Route exact path='/join' component={Join} />
-                      <Route exact path='/chat/:id' component={Chat} />
-                      <Route exact path='/people' component={People} />
-                      <Route
+                      <PrivateRoute exact path='/chat/:id' component={Chat} />
+                      <PrivateRoute exact path='/people' component={People} />
+                      <PrivateRoute
                         exact
                         path='/conversation'
                         component={Conversation}
                       />
+                      <Route path='/' component={NotFound} />
                     </Switch>
                   </div>
                 </Fragment>

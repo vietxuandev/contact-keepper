@@ -5,7 +5,7 @@
 }
 .conversation-name {
   padding: 10px;
-  font-weight: 500;
+  font-weight: bold;
   text-align: center;
 }
 .messages {
@@ -21,11 +21,11 @@
   position: relative;
 }
 
-.input-message input[type="text"] {
+.input-message input[type='text'] {
   margin: 0;
   border: none;
   padding: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
@@ -164,4 +164,13 @@
   30% {
     transform: translateY(-5px);
   }
+}
+
+.online {
+  height: 6px;
+  width: 6px;
+  background-color: rgb(66, 183, 42);
+  border-radius: 50%;
+  display: inline-block;
+  margin: 3px;
 }

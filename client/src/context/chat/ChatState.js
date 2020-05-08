@@ -13,7 +13,7 @@ import {
 
 const ChatState = (props) => {
   const initialState = {
-    conversation: { name: "", participants: [] },
+    conversation: { name: '', participants: [] },
     conversations: [],
     messages: [],
     error: null,
@@ -25,7 +25,7 @@ const ChatState = (props) => {
       const res = await axios.get(`/api/chat/message/${id}`);
       dispatch({ type: GET_MESSAGES, payload: res.data });
     } catch (error) {
-      dispatch({ type: MESSAGES_ERROR, payload: error.response.msg });
+      dispatch({ type: MESSAGES_ERROR, payload: error.response });
     }
   };
 
@@ -63,7 +63,7 @@ const ChatState = (props) => {
         getMessages,
         addMessage,
         getConversations,
-        getConversation
+        getConversation,
       }}
     >
       {props.children}

@@ -64,6 +64,12 @@
             opacity: 1;
           }
         }
+        .logout {
+          opacity: 0.55 !important;
+          &:hover {
+            opacity: 1 !important;
+          }
+        }
         &:last-child {
           margin-right: 0;
         }
