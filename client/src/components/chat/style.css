@@ -8,10 +8,14 @@
   font-weight: bold;
   text-align: center;
 }
+.messages-scroll {
+  position: relative;
+  margin-bottom: 10px;
+}
 .messages {
+  height: 100%;
   overflow: auto;
   flex: auto;
-  margin-bottom: 10px;
 }
 
 .input-message {
@@ -173,4 +177,20 @@
   border-radius: 50%;
   display: inline-block;
   margin: 3px;
+}
+.scroll-to-bottom {
+  cursor: pointer;
+  opacity: 0.5;
+  background-color: #333;
+  height: 40px;
+  width: 40px;
+  color: #fff;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  border-radius: 50%;
+}
+
+.scroll-to-bottom i {
+  padding: 12px 15px;
 }

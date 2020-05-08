@@ -14,7 +14,7 @@ const ContactForm = () => {
         name: '',
         email: '',
         phone: '',
-        type: 'personal'
+        type: 'personal',
       });
     }
   }, [contactContext, current]);
@@ -23,15 +23,15 @@ const ContactForm = () => {
     name: '',
     email: '',
     phone: '',
-    type: 'personal'
+    type: 'personal',
   });
 
   const { name, email, phone, type } = contact;
 
-  const onChange = e =>
+  const onChange = (e) =>
     setContact({ ...contact, [e.target.name]: e.target.value });
 
-  const onSubmit = e => {
+  const onSubmit = (e) => {
     e.preventDefault();
     if (current === null) {
       addContact(contact);
@@ -73,21 +73,23 @@ const ContactForm = () => {
       />
       <h5>Contact Type</h5>
       <input
+        id='personal_id'
         type='radio'
         name='type'
         value='personal'
         checked={type === 'personal'}
         onChange={onChange}
       ></input>
-      Personal{' '}
+      <label htmlFor='personal_id'> Personal </label>
       <input
+        id='professional_id'
         type='radio'
         name='type'
         value='professional'
         checked={type === 'professional'}
         onChange={onChange}
       ></input>
-      Professional{' '}
+      <label htmlFor='professional_id'> Professional </label>
       <div>
         <input
           type='submit'

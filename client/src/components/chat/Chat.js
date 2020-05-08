@@ -26,11 +26,12 @@ const Chat = () => {
   const { id = '' } = useParams();
   const [content, setContent] = useState('');
   const [typing, setTyping] = useState(false);
+  const [showScroll, setShowScroll] = useState(false);
   const [connected, setConnected] = useState(false);
   const [notifyTyping, setNotifyTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView();
+    messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
   };
   const {
     getConversation = () => {},
@@ -59,6 +60,11 @@ const Chat = () => {
     return size;
   };
 
+  const onScroll = (e) => {
+    setShowScroll(
+      e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight) > 150
+    );
+  };
   const [width, height] = useWindowSize();
   useEffect(() => {
     socket = io(ENDPOINT, {
@@ -73,6 +79,7 @@ const Chat = () => {
     };
     // eslint-disable-next-line
   }, []);
+
   useEffect(() => {
     loadUser();
     getMessages(id);
@@ -136,52 +143,60 @@ const Chat = () => {
             .replace(',', ', ')}
       </div>
       <div
-        className='messages'
+        onScroll={onScroll}
+        className='messages-scroll'
         style={{ height: width < 992 ? height - 175 : height - 205 }}
       >
-        {messages.map((message, index) => (
-          <div
-            key={message._id}
-            className={ClassNames('messageContainer', {
-              sender: user._id === message.sender,
-            })}
-          >
-            {user._id !== message.sender &&
-              (index === messages.length - 1 ||
-                messages[index + 1].sender === user._id) && (
-                <img src={UserDefault} className='avatar-user' alt='avatar' />
-              )}
+        <div className='messages'>
+          {messages.map((message, index) => (
             <div
-              className={ClassNames('messageBox', {
-                firstMessage: index === 0,
+              key={message._id}
+              className={ClassNames('messageContainer', {
+                sender: user._id === message.sender,
               })}
             >
-              <div className='messageText'>
-                <Linkify target='_blank'>
-                  {ReactEmoji.emojify(message.content)}
-                </Linkify>
+              {user._id !== message.sender &&
+                (index === messages.length - 1 ||
+                  messages[index + 1].sender === user._id) && (
+                  <img src={UserDefault} className='avatar-user' alt='avatar' />
+                )}
+              <div
+                className={ClassNames('messageBox', {
+                  firstMessage: index === 0,
+                })}
+              >
+                <div className='messageText'>
+                  <Linkify target='_blank'>
+                    {ReactEmoji.emojify(message.content)}
+                  </Linkify>
+                </div>
               </div>
+              {user._id === message.sender && index === messages.length - 1 && (
+                <img src={UserDefault} className='status' alt='avatar' />
+              )}
             </div>
-            {user._id === message.sender && index === messages.length - 1 && (
-              <img src={UserDefault} className='status' alt='avatar' />
-            )}
-          </div>
-        ))}
-        {notifyTyping && (
-          <div className='messageContainer'>
-            <img src={UserDefault} className='avatar-user' alt='avatar' />
-            <div className='messageBox'>
-              <div className='messageText'>
-                <div id='wave'>
-                  <span className='dot'></span>
-                  <span className='dot'></span>
-                  <span className='dot'></span>
+          ))}
+          {notifyTyping && (
+            <div className='messageContainer'>
+              <img src={UserDefault} className='avatar-user' alt='avatar' />
+              <div className='messageBox'>
+                <div className='messageText'>
+                  <div id='wave'>
+                    <span className='dot'></span>
+                    <span className='dot'></span>
+                    <span className='dot'></span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
+          )}
+          {showScroll && (
+            <div className='scroll-to-bottom' onClick={() => scrollToBottom()}>
+              <i className='fa fa-angle-down' aria-hidden='true'></i>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
       <div className='input-message'>
         <input
