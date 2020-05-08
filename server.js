@@ -71,7 +71,7 @@ io.on('connection', async (socket) => {
   //Someone is typing
   socket.on('typing', (data) => {
     const { id, typing } = data;
-    io.in(id).broadcast.emit('notifyTyping', {
+    socket.broadcast.to(id).emit('notifyTyping', {
       typing,
     });
   });
@@ -87,7 +87,7 @@ io.on('connection', async (socket) => {
         sender: sender._id,
         content,
       }).save();
-      io.in(id).emit('message', message);
+      io.to(id).emit('message', message);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
