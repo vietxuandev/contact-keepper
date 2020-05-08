@@ -69,8 +69,9 @@ io.on('connection', async (socket) => {
   });
 
   //Someone is typing
-  socket.on('typing', (typing) => {
-    socket.broadcast.emit('notifyTyping', {
+  socket.on('typing', (data) => {
+    const { id, typing } = data;
+    io.in(id).broadcast.emit('notifyTyping', {
       typing,
     });
   });

@@ -127,7 +127,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (connected) {
-      socket.emit('typing', typing);
+      socket.emit('typing', { id, typing });
     }
   }, [typing, connected]);
 
